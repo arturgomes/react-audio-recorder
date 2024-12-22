@@ -10,11 +10,13 @@
     "dist"
   ],
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c rollup.config.mjs",
     "test": "jest",
-    "lint": "eslint src",
+    "test:watch": "jest --watch",
+    "lint": "eslint 'src/**/*.{ts,tsx}'",
+    "lint:fix": "eslint 'src/**/*.{ts,tsx}' --fix",
     "prepare": "npm run build",
-    "prepublishOnly": "npm test && npm run lint",
+    "prepublishOnly": "npm run lint && npm run test",
     "clean": "rimraf dist"
   },
   "keywords": [
@@ -30,6 +32,9 @@
     "type": "git",
     "url": "https://github.com/arturgomes/react-audio-recorder"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "peerDependencies": {
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
@@ -41,23 +46,26 @@
     "@rollup/plugin-commonjs": "^25.0.0",
     "@rollup/plugin-node-resolve": "^15.0.0",
     "@rollup/plugin-typescript": "^11.0.0",
+    "@testing-library/jest-dom": "^5.0.0",
+    "@testing-library/react": "^14.0.0",
+    "@types/jest": "^29.5.14",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
+    "autoprefixer": "^10.0.0",
     "eslint": "^8.0.0",
     "eslint-plugin-react": "^7.0.0",
     "eslint-plugin-react-hooks": "^4.0.0",
     "jest": "^29.0.0",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/jest-dom": "^5.0.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "postcss": "^8.0.0",
     "rimraf": "^5.0.0",
     "rollup": "^3.0.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.0",
-    "typescript": "^5.0.0",
     "tailwindcss": "^3.0.0",
-    "autoprefixer": "^10.0.0",
-    "postcss": "^8.0.0"
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.0.0"
   }
 }

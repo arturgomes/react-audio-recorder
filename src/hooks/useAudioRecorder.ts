@@ -9,21 +9,21 @@ export interface AudioRecorderConfig {
   compressionBitsPerSecond?: number;
 }
 
-export interface AudioRecorderState {
+interface AudioRecorderState {
   isRecording: boolean;
   isPlaying: boolean;
   duration: number;
   audioUrl: string;
 }
 
-export interface AudioRecorderControls {
+interface AudioRecorderControls {
   startRecording: () => Promise<void>;
   stopRecording: () => void;
   togglePlayback: () => void;
   deleteRecording: () => void;
 }
 
-export const useAudioRecorder = ({
+const useAudioRecorder = ({
   onSave = () => {},
   onDelete = () => {},
   onUpdate = () => {},
@@ -41,7 +41,7 @@ export const useAudioRecorder = ({
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<Blob[]>([]);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<number | null>(null);
   const audioRef = useRef(new Audio());
 
   const startRecording = async () => {
@@ -58,7 +58,7 @@ export const useAudioRecorder = ({
       chunksRef.current = [];
       
       mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) {
+        if (e.data && e.data.size > 0) {
           chunksRef.current.push(e.data);
         }
       };
@@ -70,14 +70,12 @@ export const useAudioRecorder = ({
         onSave(blob);
       };
       
+      setState(prev => ({ ...prev, isRecording: true, duration: 0 }));
       mediaRecorder.start(1000);
-      setState(prev => ({ ...prev, isRecording: true }));
       
-      let seconds = 0;
-      timerRef.current = setInterval(() => {
-        seconds++;
-        setState(prev => ({ ...prev, duration: seconds }));
-        if (seconds >= maxDuration) {
+      timerRef.current = window.setInterval(() => {
+        setState(prev => ({ ...prev, duration: prev.duration + 1 }));
+        if (state.duration >= maxDuration) {
           stopRecording();
         }
       }, 1000);
@@ -100,11 +98,12 @@ export const useAudioRecorder = ({
   const togglePlayback = () => {
     if (state.isPlaying) {
       audioRef.current.pause();
+      setState(prev => ({ ...prev, isPlaying: false }));
     } else {
       audioRef.current.src = state.audioUrl;
       audioRef.current.play();
+      setState(prev => ({ ...prev, isPlaying: true }));
     }
-    setState(prev => ({ ...prev, isPlaying: !prev.isPlaying }));
   };
 
   const deleteRecording = () => {

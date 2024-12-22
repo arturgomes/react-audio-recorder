@@ -1,8 +1,8 @@
 import React from "react";
 import { Play, Pause, Mic, Square, Trash2 } from 'lucide-react';
 
-import useAudioRecorder, { AudioRecorderConfig } from "useAudioRecorder";
-import { formatTime } from "utils/formatTime";
+import useAudioRecorder, { AudioRecorderConfig } from "../hooks/useAudioRecorder";
+import { formatTime } from "../utils/formatTime";
 
 export const AudioRecorder: React.FC<AudioRecorderConfig> = (props) => {
   const [state, controls] = useAudioRecorder(props);
