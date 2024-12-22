@@ -23,10 +23,13 @@ interface AudioRecorderControls {
   deleteRecording: () => void;
 }
 
+// Default noop functions with proper types
+const noopWithBlob = (): void => { return; };
+const noop = (): void => { return; };
+
 const useAudioRecorder = ({
-  onSave = () => {},
-  onDelete = () => {},
-  onUpdate = () => {},
+  onSave = noopWithBlob,
+  onDelete = noop,
   maxDuration = 300,
   compressionFormat = 'audio/webm;codecs=opus',
   compressionBitsPerSecond = 96000,
